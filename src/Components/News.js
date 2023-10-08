@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spiner from './Spiner'
 
 export class News extends Component {
     articles = [
@@ -77,40 +78,45 @@ export class News extends Component {
             articles: this.articles,
             loading: false,
             page: 1,
-            pageSize: 24
         }
     }
-
+    
     async componentDidMount() {
         console.log("cdm");
-        let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=1pageSize=${this.state.pageSize}`;
+        this.setState({ loading: true })
+        let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData);
         this.setState({
+            loading: false,
             articles: parsedData.articles,
-            totalResults: parsedData.totalResults
+            totalResults: parsedData.totalResults,
         })
     }
 
     handlePrev = async () => {
         console.log("Prev");
-        let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page - 1}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+        this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
         this.setState({
             articles: parsedData.articles,
-            page: this.state.page - 1
+            page: this.state.page - 1,
+            loading: false
         })
     }
     handleNext = async () => {
-        if (this.state.page  < Math.ceil(this.state.totalResults / this.state.pageSize)) {
+        if (this.state.page < Math.ceil(this.state.totalResults / this.props.pageSize)) {
             console.log("Next");
-            let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page + 1}`;
+            this.setState({ loading: true })
+            let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
             let data = await fetch(url);
             let parsedData = await data.json();
             this.setState({
                 articles: parsedData.articles,
+                loading: false,
                 page: this.state.page + 1
             })
         }
@@ -120,18 +126,19 @@ export class News extends Component {
         console.log("first")
         return (
             <div className="container my-4">
-                <h1>NewsMonkey - Top Headlines</h1>
+                <h1 className="text-center">NewsMonkey - Top Headlines</h1>
+                {this.state.loading && <Spiner />}
                 <div className="row my-3">
                     {this.state.articles.map((element) => {
                         return <div className="col-md-4" key={element.url}>
                             <NewsItem title={element.title ? element.title.slice(0, 45) : ""} description={element.description ? element.description.slice(0, 88) : ""}
-                                imageUrl={element.urlToImage ? element.urlToImage : "https://ichef.bbci.co.uk/news/1024/branded_news/AE1D/production/_131337544_borderfence.jpg"} newsUrl={element.url ? element.url : "#"} />
+                                imageUrl={element.urlToImage ? element.urlToImage : "https://www.ft.com/__origami/service/image/v2/images/raw/https%3A%2F%2Fwww.ft.com%2F__origami%2Fservice%2Fimage%2Fv2%2Fimages%2Fraw%2Fhttps%253A%252F%252Fd1e00ek4ebabms.cloudfront.net%252Fproduction%252F41bd854f-b2e7-42d7-9b65-b7dc388444e8.jpg%3Fsource%3Dnext-article%26fit%3Dscale-down%26quality%3Dhighest%26width%3D700%26dpr%3D1?source=next-opengraph&fit=scale-down&width=900"} newsUrl={element.url ? element.url : "#"} />
                         </div>
                     })}
                 </div>
                 <div className="container d-flex justify-content-between">
                     <button disabled={this.state.page <= 1} type="button" className="btn btn-dark" onClick={this.handlePrev}>&larr; Previous</button>
-                    <button disabled={this.state.page+1 > Math.ceil(this.state.totalResults / this.state.pageSize)} type="button" className="btn btn-dark" onClick={this.handleNext}>Next &rarr;</button>
+                    <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)} type="button" className="btn btn-dark" onClick={this.handleNext}>Next &rarr;</button>
                 </div>
             </div>
         )
