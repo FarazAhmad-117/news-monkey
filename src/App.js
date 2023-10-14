@@ -13,7 +13,6 @@ export default class App extends Component {
   apiKey = process.env.REACT_APP_API_KEY
   
   constructor() {
-    
     super();
     console.log(this.apiKey);
     this.state = {
@@ -22,6 +21,7 @@ export default class App extends Component {
     }
   }
 
+  
   setProgress = (progress) => {
     this.setState({
       progress: progress

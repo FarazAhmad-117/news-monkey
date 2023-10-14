@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Monkey News 
+
+This is a news app. Created by [Faraz Ahmad](https://github.com/FarazAhmad-117).
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

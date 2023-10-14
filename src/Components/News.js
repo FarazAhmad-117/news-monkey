@@ -29,10 +29,9 @@ export class News extends Component {
             totalPages:0
         }
     }
-
+    
     async componentDidMount() {
         this.updateNews();
-        console.log(this.props.apiKey);
     }
 
     async updateNews() {
@@ -55,7 +54,7 @@ export class News extends Component {
     }
 
     fetchMoreData = async () => {
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=88f2a12702c143bd853759ebbe213b7f&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
         document.title = ` News Monkey | ${this.capitalize(this.props.category)} `;
         let data = await fetch(url);
         let parsedData = await data.json();
