@@ -1,20 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class NavBar extends Component {
-    constructor(){
-        super();
-        this.state = {
-            activeElement:null
-        }
+export default function NavBar(props) {
+    const selectCountry=(event)=>{
+        props.selectCountry(event.target.value);
     }
-    handleCountry = (event)=>{
-        console.log(event.target.value);
-        this.props.selectCountry(event.target.value);
-    }
-    render() {
-        return (
-            <div style={{ position: 'sticky', top: '0', zIndex: '1000' }}>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    return (
+        <div>
+            <div>
+                <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="/">NewsMonkey</a>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,11 +27,15 @@ export class NavBar extends Component {
                                 <li className="nav-item"><a className="nav-link" href="/technology">Technology</a></li>
                             </ul>
                         </div>
+                        <select className="form-select" onChange={selectCountry} aria-label="Default select example" style={{maxWidth:'20%'}}>
+                            <option defaultValue={"us"}>Select Country</option>
+                            <option value="us">US</option>
+                            <option value="in">India</option>
+                            <option value="jp">Japan</option>
+                        </select>
                     </div>
                 </nav>
             </div>
-        )
-    }
+        </div>
+    );
 }
-
-export default NavBar;
